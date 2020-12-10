@@ -2,22 +2,17 @@ import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import styles from './registerStyle.module.css';
 import { useForm } from 'react-hook-form';
-//import { registerUser } from '../../../utils/api_auth'
 import { Link, useHistory } from 'react-router-dom'
-//import {useContextValue} from "../../../state/StateProvider";
-//import {PRE_HOST} from "../../../utils/constant";
 import { signIn } from '../../../utils/api_users'
 
 const Register = (props) => {
-    //const [_, dispatch] = useContextValue()
     const { register, getValues, handleSubmit, errors } = useForm();
     const [myerrors, setErrors] = useState('');
 
-    //const role = 'user';
     let history = useHistory();
 
     const onSubmit = (data) => {
-        signIn(data.username,data.email, data.password,
+        signIn(data.username, data.email, data.password,
             (onSuccessMessage) => {
                 console.log(onSuccessMessage)
                 history.push("/login")

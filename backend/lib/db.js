@@ -216,7 +216,6 @@ module.exports = {
           })
         })
       });
-      
     }
     /* add_channel_to_user: async (id, username) => {
       const data = await db.get(`users:${id}`)

@@ -18,7 +18,8 @@ const MessageSend = (props) => {
     event.preventDefault();
     sendMessageToChannel(room.id, cookies.user.username, msg,
       (onSuccessMessage) => {
-        setMsg('')
+        socket.emit('chat message', msg, () => setMsg(''));
+        //setMsg('')
         console.log(onSuccessMessage)
       },
       (onErrorMessage) => {

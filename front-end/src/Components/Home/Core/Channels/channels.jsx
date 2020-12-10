@@ -6,6 +6,7 @@ import styles from './channelStyle.module.css'
 import { getChannels, getChannelsInfo, createChannel } from '../../../../utils/api_channels'
 import { useCookies } from "react-cookie";
 import { RoomContext } from '../../../../Context/RoomContext';
+import { socket } from '../../../../utils/socket'
 
 const Channels = () => {
     const { register, handleSubmit, errors } = useForm();
@@ -16,6 +17,7 @@ const Channels = () => {
     const handleShow = () => setShow(true);
     const [show, setShow] = useState(false);
     const [addU, setAddU] = useState(false);
+
     const getChan = () => {
         getChannels(cookies.user.id,
             (onSuccessMessage) => {
@@ -23,6 +25,7 @@ const Channels = () => {
                 onSuccessMessage.map((e, index) => {
                     getChannelsInfo(e, (onSuccessMessage2) => {
                         setChannels(channelsUser => [...channelsUser, onSuccessMessage2])
+                        
                     }, (onErrorMessage2) => {
                         console.log(onErrorMessage2)
                         setChannels([])
@@ -57,9 +60,25 @@ const Channels = () => {
     },
         []
     )
-    let listChannels = channelsUser.map((d, index) =>
+  
  
-        <Button key={d.id} variant="outline-secondary" className={styles.but}  onClick={e => setRoom({'id':d.id, 'id_cre':d.id_cre})}>
+    const changeRoom = (data) =>{
+        const info = JSON.parse(data.target.value)
+        setRoom({'id':info.id, 'id_cre':info.id_cre})
+        socket.emit('leave', {username:cookies.user.username, room:room.id }, (error) => {
+            if (error) {
+              alert(error);
+            }
+          });
+        socket.emit('join', { username:cookies.user.username, room:info.id }, (error) => {
+            if (error) {
+              alert(error);
+            }
+          });
+    }
+    let listChannels = channelsUser.map((d, index) =>
+        
+        <Button key={d.id} variant="outline-secondary" className={styles.but} value={JSON.stringify({id:d.id, id_cre:d.id_cre})}  onClick={e => changeRoom(e)}>
             {d.name}
         </Button>
     )

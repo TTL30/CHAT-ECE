@@ -16,6 +16,7 @@ const Login = () => {
     const onSubmit = (data) => {
         login(data.pseudo, data.password,
             (onSuccessMessage) => {
+                localStorage.clear()
                 history.push("/")
             },
             (onErrorMessage) => {
@@ -36,7 +37,7 @@ const Login = () => {
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Password : </Form.Label>
-                    <Form.Control type="password" placeholder="Type password" name="password" ref={register({ required: true, maxLength: 80 })}/>
+                    <Form.Control type="password" placeholder="Type password" name="password" ref={register({ required: true, maxLength: 80 })} />
                     {errors.password && errors.password.type === "required" && <p className={styles.error}> <span>&#9888;</span> Merci de bien renseigner ce champ</p>}
                 </Form.Group>
 

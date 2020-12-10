@@ -25,16 +25,17 @@ const Messages = () => {
 
 
   const getMessages = () => {
-    if(room){
+    console.log("nnnnnnnnnno")
+    if (room) {
       getMessagesChannel(room.id, (onSucessMessage) => {
         console.log(onSucessMessage)
-        if(room.id_cre === cookies.user.id) setAdd(false)
+        if (room.id_cre === cookies.user.id) setAdd(false)
         else setAdd(true)
         setChat(onSucessMessage);
       }, (onErrorMessage) => {
         console.log(onErrorMessage)
       })
-    }else{
+    } else {
       console.log("no room")
     }
   }
@@ -43,12 +44,19 @@ const Messages = () => {
     getMessages()
   }, [room]);
 
+  useEffect(() => {
+    console.log(chat)
+    socket.on('message', msg => {
+      setChat(chat => [...chat, msg]);
+    });
+  }, []);
+
   let listChat = chat.map((d, index) =>
     <div key={index} className={styles.msgr} >
       <span style={{ color: "green" }}>{d.author}: </span>
       <span>{d.content}</span>
     </div>
-  )
+  ) 
 
   const addUserToChannel = (data) => {
     addUsToChan(room.id, data.username,
@@ -67,43 +75,45 @@ const Messages = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.msg}>
-        {listChat}
-      </div>
+      {listChat}
+    </div>
       <Button hidden={add} onClick={handleShow}>
-          <h3>+</h3>
+        <h3>+</h3>
       </Button>
 
       <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add a user </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form onSubmit={handleSubmit(addUserToChannel)} >
-                        <Form.Group controlId="formBasicEmail">
-                            <Form.Label>Name : </Form.Label>
-                            <Form.Control type="text" name="username" ref={register({ required: true, maxLength: 50 })} />
-                            {errors.username && errors.username.type === "required" && <p className={styles.error}> <span>&#9888;</span> Merci de bien renseigner ce champ</p>}
+        <Modal.Header closeButton>
+          <Modal.Title>Add a user </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit(addUserToChannel)} >
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Name : </Form.Label>
+              <Form.Control type="text" name="username" ref={register({ required: true, maxLength: 50 })} />
+              {errors.username && errors.username.type === "required" && <p className={styles.error}> <span>&#9888;</span> Merci de bien renseigner ce champ</p>}
 
-                        </Form.Group>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
+            </Form.Group>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
                     </Button>
-                        <Button variant="outline-success" type="submit">
-                            Submit
+            <Button variant="outline-success" type="submit">
+              Submit
                     </Button>
-                    {myerrors &&
-                        <div className="alert alert-danger mt-3" role="alert">
-                            {myerrors}
-                        </div>
-                    }
-                     {mySuccess &&
-                        <div className="alert alert-success mt-3" role="alert">
-                            {mySuccess}
-                        </div>
-                    }
-                    </Form>
-                </Modal.Body>
-            </Modal>
+            {myerrors &&
+              <div className="alert alert-danger mt-3" role="alert">
+                {myerrors}
+              </div>
+            }
+            {mySuccess &&
+              <div className="alert alert-success mt-3" role="alert">
+                {mySuccess}
+              </div>
+            }
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+
     </div>
   );
 }
