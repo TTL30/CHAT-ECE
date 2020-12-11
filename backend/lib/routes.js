@@ -20,10 +20,7 @@ routes.get('/', (req, res) => {
     res.status(201).json(channel)
   })
   
-  routes.post('/:id/channels', async (req, res) => {
-    console.log(req.params.id)
-    console.log(req.body)
-  
+  routes.post('/:id/channels', async (req, res) => {  
     const channel = await db.channels.create_user_channel(req.params.id,req.body)
     res.status(201).json(channel)
   })
@@ -31,7 +28,6 @@ routes.get('/', (req, res) => {
   
   routes.put('/channels/users/:id', async (req, res) => {
     const user = await db.users.add_channel_to_user(req.params.id,req.body)
-    console.log("mai " + user)
     if(user === "No user with this username" || user === "User is already in this channel")res.status(404).json(user)
     else res.status(201).json(user)
   })
@@ -48,7 +44,7 @@ routes.get('/', (req, res) => {
   
   routes.delete('/channels/:id', async (req, res) => {
     const channel = await db.channels.delete(req.params.id)
-    res.json(channel)
+    res.status(201).json(channel)
   })
   
   // Messages
@@ -60,6 +56,10 @@ routes.get('/', (req, res) => {
   
   routes.post('/channels/:id/messages', async (req, res) => {
     const message = await db.messages.create(req.params.id, req.body)
+    res.status(201).json(message)
+  })
+  routes.delete('/channels/:id/messages/:id_m', async (req, res) => {
+    const message = await db.messages.delete(req.params.id_m, req.params.id)
     res.status(201).json(message)
   })
   
@@ -77,7 +77,6 @@ routes.get('/', (req, res) => {
   })
   
   routes.post('/login', async (req, res) => {
-    console.log("hey")
     const user = await db.users.login(req.body)
     if(user === "Wrong combination username/password" || user === "No account register first")res.status(404).json(user)
     else res.status(201).json(user)

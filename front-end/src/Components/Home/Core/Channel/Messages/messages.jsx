@@ -3,7 +3,7 @@ import { socket } from '../../../../../utils/socket';
 import { useCookies } from "react-cookie";
 import styles from './messagesStyle.module.css';
 import { RoomContext } from "../../../../../Context/RoomContext";
-import { getMessagesChannel } from "../../../../../utils/api_messages";
+import { deleteMessageChannel, getMessagesChannel } from "../../../../../utils/api_messages";
 import { Button, Modal, Form, Container, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { addUsToChan } from "../../../../../utils/api_users";
@@ -30,6 +30,11 @@ const Messages = () => {
         if (room.id_cre === cookies.user.id) setAdd(false);
         else setAdd(true);
         setChat(onSucessMessage);
+        socket.emit('join', { username: cookies.user.username, room: room.id, type:0 }, (error) => {
+          if (error) {
+              alert(error);
+          }
+      });
       }, (onErrorMessage) => {
         console.log(onErrorMessage);
       });
@@ -51,21 +56,60 @@ const Messages = () => {
     var dt = new Date(date/1000);
     return(dt.toLocaleString())
   }
+
+  const delMessageHide = (data) =>{
+    if(data === cookies.user.username){
+      return false
+    }else{
+      return true
+    }
+  }
+
+  useEffect(() => {
+    socket.on('delete', msg => {
+      if(msg){
+        document.getElementById(msg.message).hidden=true
+      }
+    });
+  }, []);
+
+  const deleteMessage = (data) => {
+    deleteMessageChannel(data.target.value, room.id,
+      (onSucessMessage) => {
+        console.log(onSucessMessage);
+        /* chat.map((e) => {
+          if(e.creation == data.target.value){
+            chat.splice(e)
+          }
+        }); */
+        document.getElementById(data.target.value).hidden=true
+        socket.emit('delete message', { room:room.id,message: data.target.value}, (error) => {
+          if (error) {
+              alert(error);
+          }
+      });
+      },
+      (onErrorMessage) => {
+        console.log(onErrorMessage)
+      }
+      )
+
+  }
   let listChat = chat.map((d, index) =>
-    <div key={index} className={styles.msgr} >
-      <Container>
-        <Row>
+    <div id={d.creation}  className={styles.msgr} >
+      <Container >
+        <Row >
           <Col className={styles.ico} xs lg="1">
             <h3> <FaUserAlt /> </h3> 
           </Col>
-          <Col md="auto">
+          <Col xs lg="9">
           <span style={{ color: "white" }}>{d.author} <i style={{color: "gray", fontSize:'10px'}}>{getdate(d.creation)}</i> </span>
             <p style={{color: "white"}}>
             {d.content}
             </p>
           </Col>
           <Col xs lg="1"  >
-          <Button >
+          <Button hidden={delMessageHide(d.author)} value={d.creation} onClick={e => deleteMessage(e)}>
             Delete
           </Button>
           </Col>

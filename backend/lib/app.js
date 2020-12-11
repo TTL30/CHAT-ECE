@@ -5,10 +5,9 @@ const http = require('http');
 app.use(require('body-parser').json())
 const microtime = require('microtime')
 const routes = require('./routes');
-var cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const opt = {
   origin: "http://localhost:3000",
-  methods: ["GET", "POST", "PUT"],
   credentials: true
 }
 
@@ -17,11 +16,11 @@ const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     allowedHeaders: ["ece-chat"]
 
-  },    autoConnect: false
+  }
 });
 
 const { addUser,
@@ -32,17 +31,21 @@ const BOTCHAT = "ECE-BOT";
 
 
 io.on('connect', (socket) => {
-  console.log(socket.id)
+
   /* Join chat room  */
-  socket.on('join', ({ username, room }, callback) => {
+  socket.on('join', ({ username, room, type }, callback) => {
     /* add user to users list  */
     const { error, user } = addUser({ id: socket.id, username, room });
     if (error) {
       return callback(error);
     }
+    if(type === 1) {
+      socket.broadcast.to(user.room).emit('message', { author: BOTCHAT, content: `${user.username} a rejoins la conversation` });
+    }
+    socket.emit('message', { author: BOTCHAT, content: `${user.username}, bienvenue sur  dans la conversation!`, channelId: room, creation: microtime.now() });
+
     socket.join(user.room);
-    socket.emit('message', { author: BOTCHAT, content: `${user.username}, bienvenue sur  ${user.room} !`, channelId: room, creation: microtime.now() });
-    socket.broadcast.to(user.room).emit('message', { author: BOTCHAT, content: `${user.username} a rejoins la conversation` });
+    
     callback();
   });
   socket.on('leave', ({ username, room }, callback) => {
@@ -55,19 +58,24 @@ io.on('connect', (socket) => {
     callback();
   });
 
-  socket.on('chat message', (message, callback) => {
+  socket.on('chat message', (message, creation, callback) => {
     const user = getUser(socket.id);
     if (user) {
-      console.log("cestfind")
-      io.to(user.room).emit('message', { author: user.username, content: message, channelId: user.room, creation: microtime.now() });
+      io.to(user.room).emit('message', { author: user.username, content: message, channelId: user.room, creation: creation });
+    }else{
+      console.log("je le trouve pas")
     }
 
     callback();
   });
 
+  socket.on('delete message', ({room,message}, callback) => {
+    socket.broadcast.to(room).emit('delete', {message});
+    callback();
+  });
+
   socket.on('disconect', () => {
     const user = removeUser(socket.id);
-
     if (user) {
       io.to(user.room).emit('message', { author: BOTCHAT, content: `${user.username} a quitté la conversation.` , channelId: user.room, creation: microtime.now()});
     }

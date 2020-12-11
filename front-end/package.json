@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.3.0",
     "bootstrap": "^4.5.3",
     "core-js": "^3.8.0",
+    "microtime": "^3.0.0",
     "moment": "^2.29.1",
     "qs": "^6.9.4",
     "query-string": "^6.13.7",

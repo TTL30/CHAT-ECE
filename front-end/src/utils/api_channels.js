@@ -31,7 +31,6 @@ export const getChannelsInfo = async (id, onSuccess, onError) => {
             mode: 'cors',
             method: 'GET',
         });
-
         if (response.ok) {
             const json = await response.json()
             onSuccess(json)
@@ -71,72 +70,3 @@ export const createChannel = async (id, name, onSuccess, onError) => {
     }
 }
 
-
-export const getTask = async (onSuccess, onError) => {
-    try {
-        const response = await fetch(`${BACK_HOST}/list`, {
-            headers: HTTP_HEADERS,
-            credentials: "include",
-            mode: 'cors',
-            method: 'GET'
-        });
-
-        if (response.ok) {
-            const json = await response.json()
-            onSuccess(json)
-        }
-        else {
-            const json = await response.json()
-            onError(json)
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const updateTask = async (id_task, description, onSuccess, onError) => {
-    try {
-        const response = await fetch(`${BACK_HOST}list/update/${id_task}`, {
-            headers: HTTP_HEADERS,
-            credentials: "include",
-            mode: 'cors',
-            method: 'PUT',
-            body: JSON.stringify({
-                description: description,
-            })
-        });
-
-        if (response.ok) {
-            const json = await response.json()
-            onSuccess(json)
-        }
-        else {
-            const json = await response.json()
-            onError(json)
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const deleteTask = async (id_task, onSuccess, onError) => {
-    try {
-        const response = await fetch(`${BACK_HOST}list/delete/${id_task}`, {
-            headers: HTTP_HEADERS,
-            credentials: "include",
-            mode: 'cors',
-            method: 'DELETE',
-        });
-
-        if (response.ok) {
-            const json = await response.json()
-            onSuccess(json)
-        }
-        else {
-            const json = await response.json()
-            onError(json)
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}

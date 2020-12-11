@@ -60,14 +60,18 @@ const Channels = () => {
 
     //switch room
     const changeRoom = (data) => {
+        data.preventDefault();
         const info = JSON.parse(data.target.value);
         setRoom({ 'id': info.id, 'id_cre': info.id_cre });
-        socket.emit('leave', { username: cookies.user.username, room: room.id }, (error) => {
-            if (error) {
-                alert(error);
-            }
-        });
-        socket.emit('join', { username: cookies.user.username, room: info.id }, (error) => {
+        if(room !== null && room.id !== info.id){
+            socket.emit('leave', { username: cookies.user.username, room: room.id }, (error) => {
+                if (error) {
+                    alert(error);
+                }
+            });
+        }
+       
+        socket.emit('join', { username: cookies.user.username, room: info.id, type: 1 }, (error) => {
             if (error) {
                 alert(error);
             }
@@ -80,9 +84,17 @@ const Channels = () => {
         </Button>
     );
 
+    const acc = (e) =>{
+        e.preventDefault()
+        localStorage.clear()
+        setRoom(null)
+    }
     return (
         <div className={styles.wrapper}>
             <ButtonGroup vertical>
+                <Button onClick={e => acc(e)}>
+                    accueil
+                </Button>
                 {listChannels}
                 <Button onClick={handleShow}>
                     <h3>+</h3>

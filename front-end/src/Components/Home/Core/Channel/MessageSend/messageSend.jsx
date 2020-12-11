@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie';
 import { sendMessageToChannel } from '../../../../../utils/api_messages';
 
 
+
 const MessageSend = () => {
 
   const [msg, setMsg] = useState('');
@@ -15,9 +16,10 @@ const MessageSend = () => {
 
   const sendMessage = (event) => {
     event.preventDefault();
-    sendMessageToChannel(room.id, cookies.user.username, msg,
+    const time = Date.now()
+    sendMessageToChannel(room.id, cookies.user.username, msg,time,
       (onSuccessMessage) => {
-        socket.emit('chat message', msg, () => setMsg(''));
+        socket.emit('chat message', msg,time, () => setMsg(''));
         console.log(onSuccessMessage)
       },
       (onErrorMessage) => {

@@ -73,7 +73,7 @@ module.exports = {
       if (!channelId) throw Error('Invalid channel')
       if (!message.author) throw Error('Invalid message')
       if (!message.content) throw Error('Invalid message')
-      creation = microtime.now()
+      creation = message.creation
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
         content: message.content
@@ -99,6 +99,12 @@ module.exports = {
         })
       })
     },
+    delete: async (id, channelId) => {
+      const original = await db.get(`messages:${channelId}:${id}`)
+      if (!original) throw Error('Unregistered channel id')
+      await db.del(`messages:${channelId}:${id}`)
+      return merge(original, { id: id })
+    }
   },
   users: {
     create: async (myUser) => {
