@@ -7,8 +7,7 @@ import { useCookies } from 'react-cookie';
 import { sendMessageToChannel } from '../../../../../utils/api_messages';
 
 
-
-const MessageSend = (props) => {
+const MessageSend = () => {
 
   const [msg, setMsg] = useState('');
   const { room, setRoom } = useContext(RoomContext)
@@ -19,11 +18,10 @@ const MessageSend = (props) => {
     sendMessageToChannel(room.id, cookies.user.username, msg,
       (onSuccessMessage) => {
         socket.emit('chat message', msg, () => setMsg(''));
-        //setMsg('')
         console.log(onSuccessMessage)
       },
       (onErrorMessage) => {
-        console.log(onErrorMessage)
+        console.log(onErrorMessage);
       }
     )
   }

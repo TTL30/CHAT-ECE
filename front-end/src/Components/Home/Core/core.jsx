@@ -4,7 +4,7 @@ import Channels from './Channels/channels';
 import Channel from './Channel/channel';
 import { Col, Container, Row } from 'react-bootstrap';
 
-const Core = (props) => {
+const Core = () => {
 
     return (
         <Container fluid>

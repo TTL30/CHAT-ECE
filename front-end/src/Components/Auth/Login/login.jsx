@@ -9,25 +9,24 @@ import { useCookies } from "react-cookie";
 const Login = () => {
 
     const { register, handleSubmit, errors } = useForm();
-    let history = useHistory();
     const [myerrors, setErrors] = useState('');
     const [cookies, setCookie] = useCookies(["user"]);
+    let history = useHistory();
 
     const onSubmit = (data) => {
         login(data.pseudo, data.password,
             (onSuccessMessage) => {
-                localStorage.clear()
-                history.push("/")
+                localStorage.clear();
+                history.push("/");
             },
             (onErrorMessage) => {
-                console.error(onErrorMessage)
-                setErrors(onErrorMessage)
-            })
+                localStorage.clear();
+                setErrors(onErrorMessage);
+            });
     }
 
     return (
         <div className={styles.wrapper}>
-
             <Form className={styles.form} onSubmit={handleSubmit(e => onSubmit(e))}>
                 <h2>Connect to ECECHAT </h2>
                 <Form.Group>
@@ -40,7 +39,6 @@ const Login = () => {
                     <Form.Control type="password" placeholder="Type password" name="password" ref={register({ required: true, maxLength: 80 })} />
                     {errors.password && errors.password.type === "required" && <p className={styles.error}> <span>&#9888;</span> Merci de bien renseigner ce champ</p>}
                 </Form.Group>
-
                 <div className="text-center">
                     <Button variant="outline-success" type="submit">
                         Submit
@@ -50,7 +48,6 @@ const Login = () => {
                             Register
                         </Button>
                     </Link>
-
                     {myerrors &&
                         <div className="alert alert-danger mt-3" role="alert">
                             {myerrors}

@@ -101,10 +101,8 @@ module.exports = {
     },
   },
   users: {
-  
     create: async (myUser) => {
       return new Promise((resolve, reject) => {
-
         const users = []
         db.createReadStream({
           gt: "users:",
@@ -116,24 +114,33 @@ module.exports = {
         }).on('error', (err) => {
           reject(err)
         }).on('end', (err) => {
-          users.some((e, index) => {
-            if (myUser.username === e.username || myUser.email === e.email) {
-              resolve("Username/email already used")
-              return true
-            } if (index + 1 === users.length) {
-              const id = uuid()
-              db.put(`users:${id}`, JSON.stringify(myUser))
-              resolve(e)
-            }
-          })
+          if (users.length === 0) {
+            const id = uuid()
+            db.put(`users:${id}`, JSON.stringify(myUser))
+            resolve(myUser)
+          } else {
+            users.some((e, index) => {
+              if (myUser.username === e.username || myUser.email === e.email) {
+                resolve("Username/email already used")
+                return true
+              } else if (index + 1 === users.length) {
+                const id = uuid()
+                db.put(`users:${id}`, JSON.stringify(myUser))
+                resolve(e)
+              }
+            })
+          }
+
         })
       })
     },
 
     login: async (myUser) => {
+
       return new Promise((resolve, reject) => {
 
         const users = []
+        let cpt = 0
         db.createReadStream({
           gt: "users:",
           lte: "users" + String.fromCharCode(":".charCodeAt(0) + 1),
@@ -144,14 +151,22 @@ module.exports = {
         }).on('error', (err) => {
           reject(err)
         }).on('end', (err) => {
-          users.some((e, index) => {
-            if (myUser.username === e.username && myUser.password === e.password) {
-              resolve(e)
-              return true
-            } if (index + 1 === users.length) {
-              resolve("Wrong combination username/password")
-            }
-          })
+          if (users.length === 0) {
+            resolve("No account register first")
+          } else {
+            users.some((e, index) => {
+              if (myUser.username === e.username && myUser.password === e.password) {
+                resolve(e)
+                return true
+              } else {
+                cpt += 1
+                if(cpt === users.length){
+                  resolve("Wrong combination username/password")
+                }
+            
+              }
+            })
+          }
         })
       })
     },
@@ -186,7 +201,7 @@ module.exports = {
     },
     add_channel_to_user: async (id, myUser) => {
       return new Promise((resolve, reject) => {
-        console.log("jai + " + myUser.username )
+        let cpt = 0
         const users = []
         db.createReadStream({
           gt: "users:",
@@ -199,36 +214,53 @@ module.exports = {
           reject(err)
         }).on('end', (err) => {
           users.some((e, index) => {
-            if(myUser.username === e.username) {
-              const chan = e.channels
-              chan.push(id)
-              db.put(`users:${e.id}`, JSON.stringify({
-                username: e.username,
-                email:e.email,
-                password: e.password,
-                channels: chan
-              }))
-              resolve("user added to channel ")
-              return true
-            } if (index + 1 === users.length) {
-              resolve("No user with this username")
+            if (myUser.username === e.username) {
+              const getChans = async () => {
+                const data = await db.get(`users:${e.id}`)
+                const myChan = await JSON.parse(data).channels
+                if (myChan.length === 0) {
+                  myChan.push(id)
+                  db.put(`users:${e.id}`, JSON.stringify({
+                    username: e.username,
+                    email: e.email,
+                    password: e.password,
+                    channels: myChan
+                  }))
+                  resolve("User added to channel ")
+                } else {
+                  myChan.some((d, ind) => {
+                    if (d === id) {
+                      resolve("User is already in this channel")
+                      return true
+                    } if (ind + 1 === myChan.length) {
+                      myChan.push(id)
+                      db.put(`users:${e.id}`, JSON.stringify({
+                        username: e.username,
+                        email: e.email,
+                        password: e.password,
+                        channels: myChan
+                      }))
+                      resolve("User added to channel ")
+                    }
+                  })
+                }
+                return true
+              }
+              getChans()
             }
+            else {
+              cpt += 1
+              if(cpt === users.length){
+                resolve("No user with this username")
+              }
+          
+            }
+
           })
+
         })
       });
-    }
-    /* add_channel_to_user: async (id, username) => {
-      const data = await db.get(`users:${id}`)
-      if (!data) throw Error('Unregistered user id')
-      const chan = JSON.parse(data).channels
-      chan.push(id_ch)
-      await db.put(`users:${id}`, JSON.stringify({
-        username: JSON.parse(data).username,
-        email: JSON.parse(data).email,
-        password: JSON.parse(data).password,
-        channels: chan
-      }))
-    } */,
+    },
     update: (id, user) => {
       const original = store.users[id]
       if (!original) throw Error('Unregistered user id')

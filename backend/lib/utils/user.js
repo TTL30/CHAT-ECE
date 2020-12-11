@@ -9,19 +9,20 @@ const addUser = ({ id, username, room }) => {
   const user = { id, username, room };
   const alreadyIn = users.find((user) => user.room === room && user.username === username)
 
-  if(alreadyIn){
+  /* if(alreadyIn){
     console.log("deja la")
-    return{ error: 'Vous êtes déjà dans le chat !' };
-  }
+    return{ error: 'Vous êtes déjà dans le chat dans un autre onglet !' };
+  } */
+  console.log("la ")
 
   users.push(user);
   return { user }
 }
 
 /* get user with id */ 
-const getUser = (id) => users.find((user) => user.id === id);
 
-/* Remove User from list */ 
+/* const findUserByUser = (username) => users.find((user) => user.username === username);
+ *//* Remove User from list */ 
 const removeUser = (id) => {
   const index = users.findIndex((user) => user.id === id);
   if(index !== -1){
@@ -32,5 +33,6 @@ const removeUser = (id) => {
 module.exports = {
   addUser,
   removeUser,
-  getUser
+  getUser,
+  findUserByUser
 };

@@ -1,7 +1,6 @@
 import { Auth } from './auth';
 import {BACK_HOST, HTTP_HEADERS} from './constant'
 
-
 export const login = async (username,password, onSuccess, onError) => {
     try {
         const response = await fetch(`${BACK_HOST}/login`, {

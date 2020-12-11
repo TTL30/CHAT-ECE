@@ -5,22 +5,19 @@ import { useForm } from 'react-hook-form';
 import { Link, useHistory } from 'react-router-dom'
 import { signIn } from '../../../utils/api_users'
 
-const Register = (props) => {
+const Register = () => {
     const { register, getValues, handleSubmit, errors } = useForm();
     const [myerrors, setErrors] = useState('');
-
     let history = useHistory();
 
     const onSubmit = (data) => {
         signIn(data.username, data.email, data.password,
             (onSuccessMessage) => {
-                console.log(onSuccessMessage)
-                history.push("/login")
+                history.push("/login");
             },
             (onErrorMessage) => {
-                console.error(onErrorMessage)
-                setErrors(onErrorMessage)
-            })
+                setErrors(onErrorMessage);
+            });
     };
 
     const passwordChecked = async (value) => {
@@ -65,17 +62,14 @@ const Register = (props) => {
                 </Form.Group>
 
                 <div className="text-center">
-
                     <Button variant="outline-success" type="submit">
                         Submit
                     </Button>
-
                     <Link to={'/login'}>
                         <Button className={styles.boutConex} variant="outline-primary" type="submit">
                             Log In
                         </Button>
                     </Link>
-
                     {myerrors &&
                         <div className="alert alert-danger mt-3" role="alert">
                             {myerrors}

@@ -7,10 +7,10 @@ const Home = (props) => {
 
     return (
         <div>
-           <Header />
-           <Core />
-{/*             <Footer />
- */}        </div>
+            <Header />
+            <Core />
+            <Footer />
+        </div>
     );
 }
 

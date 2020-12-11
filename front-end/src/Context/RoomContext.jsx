@@ -9,7 +9,7 @@ const RoomContextProvider = (props) => {
         console.log(localData)
         if (localData === undefined || localData === null) {
             return 'nul1'
-        } else {
+        } else if(localData !== ''){
             return JSON.parse(localData) ? JSON.parse(localData) : ''
         }
     })

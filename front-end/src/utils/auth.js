@@ -1,5 +1,4 @@
 import { Cookies } from 'react-cookie'
-import { Redirect, useHistory } from 'react-router';
 
 const cookies = new Cookies();
 
@@ -21,7 +20,7 @@ export const Auth = {
     },
 
     signout(onSuccess) {
-        localStorage.setItem('room', '');
+        localStorage.clear();
         console.log('AUTH: signout')
         cookies.remove('user');
         onSuccess("user disconected")

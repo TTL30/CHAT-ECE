@@ -4,11 +4,9 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect
-
-} from "react-router-dom";
+  Redirect} 
+from "react-router-dom";
 import Login from './Components/Auth/Login/login';
-import { useState, useMemo } from 'react'
 import Register from './Components/Auth/Register/register';
 import RoomContextProvider from './Context/RoomContext';
 import { Auth } from './utils/auth';
@@ -27,11 +25,6 @@ const AuthRoute = ({component: Component, ...rest}) => (
 
 
 const App = () => {
-
-  const [user, setUser] = useState(null);
-
-  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
-
   return (
     <Router>
       <Switch>
