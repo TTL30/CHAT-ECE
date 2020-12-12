@@ -7,7 +7,9 @@ import { deleteMessageChannel, getMessagesChannel } from "../../../../../utils/a
 import { Button, Modal, Form, Container, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { addUsToChan } from "../../../../../utils/api_users";
-import { FaUserAlt } from 'react-icons/fa';
+import { ImBin } from 'react-icons/im';
+import Gravatar from 'react-gravatar'
+
 const Messages = () => {
   const [cookies, setCookie] = useCookies(["user"]);
   const { room, setRoom } = useContext(RoomContext);
@@ -30,7 +32,7 @@ const Messages = () => {
         if (room.id_cre === cookies.user.id) setAdd(false);
         else setAdd(true);
         setChat(onSucessMessage);
-        socket.emit('join', { username: cookies.user.username, room: room.id, type:0 }, (error) => {
+        socket.emit('join', { username: cookies.user.username, room: room.id, type:0, email:cookies.user.email }, (error) => {
           if (error) {
               alert(error);
           }
@@ -74,14 +76,10 @@ const Messages = () => {
   }, []);
 
   const deleteMessage = (data) => {
+    console.log("je veux delete client " + data.target.value)
     deleteMessageChannel(data.target.value, room.id,
       (onSucessMessage) => {
         console.log(onSucessMessage);
-        /* chat.map((e) => {
-          if(e.creation == data.target.value){
-            chat.splice(e)
-          }
-        }); */
         document.getElementById(data.target.value).hidden=true
         socket.emit('delete message', { room:room.id,message: data.target.value}, (error) => {
           if (error) {
@@ -93,26 +91,42 @@ const Messages = () => {
         console.log(onErrorMessage)
       }
       )
+  }
 
+  const bot = (author, date) =>{
+    if(author == 'ECE-BOT'){
+      return(<span style={{ color: "#7289da" }}>{author} <i style={{color: "gray", fontSize:'10px'}}>{getdate(date)}</i> </span>)
+    }else{
+      return(<span style={{ color: "white" }}><b style={{fontSize:"1.2em"}}>{author}</b> <i style={{color: "grey", fontSize:'10px'}}>{getdate(date)}</i> </span>)
+    }
+  }
+  const pic = (email) =>{
+    if(email == 'bot'){
+      return(  <Gravatar email={email}  rating="pg" default="robohash" className="CustomAvatar-image" style={{ borderRadius:"50%"}}/>)
+    }else{
+      return(  <Gravatar email={email}  rating="pg" default="monsterid" className="CustomAvatar-image" style={{ borderRadius:"50%"}}/>)
+    }
   }
   let listChat = chat.map((d, index) =>
     <div id={d.creation}  className={styles.msgr} >
       <Container >
         <Row >
           <Col className={styles.ico} xs lg="1">
-            <h3> <FaUserAlt /> </h3> 
+            {pic(d.email)}
           </Col>
-          <Col xs lg="9">
-          <span style={{ color: "white" }}>{d.author} <i style={{color: "gray", fontSize:'10px'}}>{getdate(d.creation)}</i> </span>
+          <Col sm={8}>
+          {bot(d.author, d.creation)}
             <p style={{color: "white"}}>
             {d.content}
             </p>
           </Col>
-          <Col xs lg="1"  >
+          <Col sm={2}>
           <Button hidden={delMessageHide(d.author)} value={d.creation} onClick={e => deleteMessage(e)}>
-            Delete
-          </Button>
+{/*             <ImBin />
+ */} del         
+ </Button>
           </Col>
+
         </Row>
       </Container>
     </div>
@@ -135,9 +149,6 @@ const Messages = () => {
       <div className={styles.msg}>
         {listChat}
       </div>
-      <Button hidden={add} onClick={handleShow}>
-        <h3>+</h3>
-      </Button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

@@ -9,7 +9,6 @@ const Home = (props) => {
         <div>
             <Header />
             <Core />
-            <Footer />
         </div>
     );
 }

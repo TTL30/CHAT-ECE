@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import { RoomContext } from '../../../../../Context/RoomContext';
 import { useCookies } from 'react-cookie';
 import { sendMessageToChannel } from '../../../../../utils/api_messages';
-
+import styles from './messageSendStyle.module.css'
 
 
 const MessageSend = () => {
@@ -17,9 +17,10 @@ const MessageSend = () => {
   const sendMessage = (event) => {
     event.preventDefault();
     const time = Date.now()
-    sendMessageToChannel(room.id, cookies.user.username, msg,time,
+    console.log("le mes "  + time)
+    sendMessageToChannel(room.id, cookies.user.username, msg,time,cookies.user.email,
       (onSuccessMessage) => {
-        socket.emit('chat message', msg,time, () => setMsg(''));
+        socket.emit('chat message', msg,time,cookies.user.email, () => setMsg(''));
         console.log(onSuccessMessage)
       },
       (onErrorMessage) => {
@@ -30,7 +31,9 @@ const MessageSend = () => {
 
   return (
     <div>
-      <input value={msg}
+      
+      <input value={msg} className={styles.send}
+            placeholder="Type a message..."
         onChange={(event) => setMsg(event.target.value)}
         onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
       />

@@ -23,7 +23,7 @@ export const getMessagesChannel = async (id, onSuccess, onError) => {
     }
 }
 
-export const sendMessageToChannel = async (id, author, content, creation, onSuccess, onError) => {
+export const sendMessageToChannel = async (id, author, content, creation, email, onSuccess, onError) => {
     try {
         const response = await fetch(`${BACK_HOST}/channels/${id}/messages`, {
             headers: HTTP_HEADERS,
@@ -33,7 +33,8 @@ export const sendMessageToChannel = async (id, author, content, creation, onSucc
             body: JSON.stringify({
                 author: author,
                 content: content,
-                creation: creation
+                creation: creation,
+                email:email
             })
         });
 

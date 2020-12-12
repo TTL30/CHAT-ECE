@@ -76,7 +76,8 @@ module.exports = {
       creation = message.creation
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
-        content: message.content
+        content: message.content,
+        email: message.email
       }))
       return merge(message, { channelId: channelId, creation: creation })
     },
@@ -100,6 +101,7 @@ module.exports = {
       })
     },
     delete: async (id, channelId) => {
+      console.log("je veux delete " + id)
       const original = await db.get(`messages:${channelId}:${id}`)
       if (!original) throw Error('Unregistered channel id')
       await db.del(`messages:${channelId}:${id}`)

@@ -2,10 +2,10 @@
 const users = [];
 
 /*Add user to list if is not already in a chat */
-const addUser = ({ id, username, room }) => {
+const addUser = ({ id, username, room, email }) => {
   /* Handling with capitalcase in pseudo */ 
   username = username.trim().toLowerCase();
-  const user = { id, username, room };
+  const user = { id, username, room , email};
   const alreadyIn = users.find((user) => user.room === room && user.username === username)
   if(alreadyIn){
     users.splice(users.indexOf(alreadyIn))
@@ -32,8 +32,16 @@ const removeUser = (id) => {
   }
 }
 
+const getUsersInRoom = (room) =>{
+  console.log("je cherche dans " +  " : " + room)
+  const mesUsers = users.filter((user) => user.room === room)
+  console.log("jaii " +  " : " + JSON.stringify(mesUsers))
+  return mesUsers
+};
+
 module.exports = {
   addUser,
   removeUser,
-  getUser
+  getUser,
+  getUsersInRoom
 };

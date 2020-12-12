@@ -9,8 +9,6 @@ ml, body {
     justify-content: center;
     background-color: #3b3c3d;
     padding: 1%;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
 }
 
 
@@ -24,7 +22,6 @@ ml, body {
     background-color:#3b3c3d;
     overflow-y: auto;
     -ms-overflow-style: none;
-    
 
 }
 .scrollhost::-webkit-scrollbar {
@@ -45,3 +42,16 @@ ml, body {
     display: flex;
     text-align: center;
 }
+
+.send {
+    border: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    width: 100%;
+    font-size: 1.2em;
+    height: 50px;
+    background-color: #5b5e63;
+    color: white;
+  }
+  
+  

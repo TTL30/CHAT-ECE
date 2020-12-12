@@ -25,7 +25,7 @@ const io = require("socket.io")(server, {
 
 const { addUser,
   removeUser,
-  getUser } = require('./utils/user');
+  getUser, getUsersInRoom } = require('./utils/user');
 
 const BOTCHAT = "ECE-BOT";
 
@@ -33,17 +33,20 @@ const BOTCHAT = "ECE-BOT";
 io.on('connect', (socket) => {
 
   /* Join chat room  */
-  socket.on('join', ({ username, room, type }, callback) => {
+  socket.on('join', ({ username, room, type,email }, callback) => {
     /* add user to users list  */
-    const { error, user } = addUser({ id: socket.id, username, room });
+    const { error, user } = addUser({ id: socket.id, username, room,email });
     if (error) {
       return callback(error);
     }
     if(type === 1) {
-      socket.broadcast.to(user.room).emit('message', { author: BOTCHAT, content: `${user.username} a rejoins la conversation` });
+      socket.broadcast.to(user.room).emit('message', { author: BOTCHAT, content: `${user.username} a rejoins la conversation` ,creation: Date.now(), email:"bot" });
+      console.log("je suis la " + room)
+      io.to(user.room).emit('roomData', { room: room, users: getUsersInRoom(room) });
     }
-    socket.emit('message', { author: BOTCHAT, content: `${user.username}, bienvenue sur  dans la conversation!`, channelId: room, creation: microtime.now() });
-
+    console.log("je suis finalement la " + user.room)
+    socket.emit('message', { author: BOTCHAT, content: `${user.username}, bienvenue sur  dans la conversation!`, channelId: room,  creation: Date.now(), email:"bot" });
+    io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
     socket.join(user.room);
     
     callback();
@@ -51,17 +54,15 @@ io.on('connect', (socket) => {
   socket.on('leave', ({ username, room }, callback) => {
     removeUser(socket.id);
     socket.leave(room);
-
-    /* handling with message, send message when user connect to a chat */
-    io.to(room).emit('message', { author: BOTCHAT, content: `${username} a quitté la conversation.` });
-
+    io.to(room).emit('roomData', { room: room, users: getUsersInRoom(room) });
+    io.to(room).emit('message', { author: BOTCHAT, content: `${username} a quitté la conversation.`, creation: Date.now(), email:"bot" });
     callback();
   });
 
-  socket.on('chat message', (message, creation, callback) => {
+  socket.on('chat message', (message, creation, email, callback) => {
     const user = getUser(socket.id);
     if (user) {
-      io.to(user.room).emit('message', { author: user.username, content: message, channelId: user.room, creation: creation });
+      io.to(user.room).emit('message', { author: user.username, content: message, channelId: user.room, creation: creation, email:email });
     }else{
       console.log("je le trouve pas")
     }
@@ -77,7 +78,8 @@ io.on('connect', (socket) => {
   socket.on('disconect', () => {
     const user = removeUser(socket.id);
     if (user) {
-      io.to(user.room).emit('message', { author: BOTCHAT, content: `${user.username} a quitté la conversation.` , channelId: user.room, creation: microtime.now()});
+      io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
+      io.to(user.room).emit('message', { author: BOTCHAT, content: `${user.username} a quitté la conversation.` , channelId: user.room, creation: Date.now(), email:"bot"});
     }
   });
 

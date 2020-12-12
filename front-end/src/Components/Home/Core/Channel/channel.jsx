@@ -4,6 +4,7 @@ import Messages from './Messages/messages';
 import MessageSend from './MessageSend/messageSend';
 import Accueil from './Accueil/accueil';
 import { RoomContext } from '../../../../Context/RoomContext';
+import NavRoom from './Navbar/nav';
 
 const Channel = (props) => {
     const Display = (props) => {
@@ -11,7 +12,14 @@ const Channel = (props) => {
         if(room === null){
             return <Accueil/>;
         }else{
-            return <Messages />
+            return (
+                <div>
+                <NavRoom />
+                <Messages />
+                <MessageSend/>
+
+                </div>
+            )
         }
 
     }
@@ -19,7 +27,6 @@ const Channel = (props) => {
     return (
         <div>
             <Display />
-            <MessageSend />
         </div>
     );
 }
