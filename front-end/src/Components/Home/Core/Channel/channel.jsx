@@ -7,17 +7,17 @@ import { RoomContext } from '../../../../Context/RoomContext';
 import NavRoom from './Navbar/nav';
 
 const Channel = (props) => {
+    
     const Display = (props) => {
         const { room, setRoom } = useContext(RoomContext);
-        if(room === null){
-            return <Accueil/>;
-        }else{
+        if (room === null) {
+            return <Accueil />;
+        } else {
             return (
                 <div>
-                <NavRoom />
-                <Messages />
-                <MessageSend/>
-
+                    <NavRoom />
+                    <Messages />
+                    <MessageSend />
                 </div>
             )
         }

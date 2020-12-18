@@ -14,8 +14,8 @@ export const Auth = {
         cookies.set('user', cb,  {
             maxAge: 60 * 60 * 1000,
             secure: true,
-            sameSite: true,
-            path: '/'
+            SameSite:"None",
+            path: '/',
         });
     },
 

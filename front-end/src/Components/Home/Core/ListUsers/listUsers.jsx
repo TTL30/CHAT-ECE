@@ -24,41 +24,32 @@ const ListUsers = () => {
 
     //call chan users
     useEffect(() => {
-        console.log("mai ")
         socket.on('roomData', ({ users }) => {
-            console.log("jai recu " + JSON.stringify(users))
+            console.log("hello")
             setUsers(users);
         });
     }, [])
 
-    //switch room
-    const changeRoom = (data) => {
-        data.preventDefault();
-        const info = JSON.parse(data.target.value);
-        setRoom({ 'id': info.id, 'id_cre': info.id_cre });
-        if (room !== null && room.id !== info.id) {
-            socket.emit('leave', { username: cookies.user.username, room: room.id }, (error) => {
-                if (error) {
-                    alert(error);
-                }
-            });
+  
+    const getRandomCol = () =>{
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
         }
-        socket.emit('join', { username: cookies.user.username, room: info.id, type: 1,email:cookies.user.email }, (error) => {
-            if (error) {
-                alert(error);
-            }
-        });
+        return color;
     }
 
     let listUsers = users.map((d, index) =>
         <div className={styles.listuser}>
             <Row>
+                {console.log("jupdate " + d.username + " / " +  d.avatar)}
                 <Col sm={3} style={{marginLeft:"1%"}}>
-                    <Gravatar email={d.email} rating="pg" size={65} default="monsterid" className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
+                    <Gravatar email={d.email} rating="pg" size={55} default={d.avatar} className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
                 </Col>
                 <Col sm={8} className={styles.us}>
-                    <span key={d.id} style={{ marginTop: "5%", borderRadius: "12px" }} className={styles.user}>
-                        {d.username}
+                    <span key={d.id} style={{ marginTop: "5%", borderRadius: "12px", color:getRandomCol() }} className={styles.user}>
+                        <b>{d.username}</b>
                     </span>
                 </Col>
 
@@ -72,7 +63,7 @@ const ListUsers = () => {
         <div className={styles.wrapper}>
             <div className={styles.accueil}>
                 <span className={styles.accueilBut} v>
-                    Users in the channel
+                    Connected
                 </span>
             </div>
             <div className={styles.listechan}>

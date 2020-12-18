@@ -11,8 +11,8 @@ const Core = () => {
     return (
         <Container fluid className={styles.cont}>
             <Row>
-                <Col  sm={2}className={styles.chna}>
-                     <Channels />
+                <Col sm={2}className={styles.chna}>
+                    <Channels />
                  </Col>
                 <Col sm={8} className={styles.mesMe}>
                    <Channel />

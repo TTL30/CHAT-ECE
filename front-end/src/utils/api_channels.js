@@ -70,3 +70,25 @@ export const createChannel = async (id, name, onSuccess, onError) => {
     }
 }
 
+export const deleteChan = async (id, onSuccess, onError) => {
+    try {
+
+        const response = await fetch(`${BACK_HOST}/channels/${id}`, {
+            headers: HTTP_HEADERS,
+            credentials: "include",
+            mode: 'cors',
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            const json = await response.json()
+            onSuccess(json)
+        }
+        else {
+            const json = await response.json()
+            onError(json)
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}

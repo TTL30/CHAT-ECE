@@ -5,7 +5,6 @@ const microtime = require('microtime')
 const level = require('level')
 const db = level(__dirname + '/../db')
 
-
 module.exports = {
   channels: {
     create: async (channel) => {
@@ -29,7 +28,8 @@ module.exports = {
         username: JSON.parse(data).username,
         email: JSON.parse(data).email,
         password: JSON.parse(data).password,
-        channels: chan
+        channels: chan,
+        avatar:JSON.parse(data).avatar
       }))
       return merge(channel, { id: id })
     },
@@ -40,6 +40,7 @@ module.exports = {
       return merge(channel, { id: id })
     },
     list: async () => {
+      console.log("oui")
       return new Promise((resolve, reject) => {
         const channels = []
         db.createReadStream({
@@ -62,10 +63,46 @@ module.exports = {
       await db.put(`channels:${id}`, JSON.stringify(channel))
       return merge(original, channel)
     },
+    delete2: async (id) => {
+      try {
+        const original = await db.get(`channels:${id}`)
+        if (!original) throw Error('Unregistered channel id')
+        await db.del(`channels:${id}`)
+      } catch (e) {
+        console.log(e)
+      }
+      
+    },
     delete: async (id) => {
-      const original = await db.get(`channels:${id}`)
-      if (!original) throw Error('Unregistered channel id')
-      await db.del(`channels:${id}`)
+      try {
+        console.log("mon id " + id)
+        return new Promise((resolve, reject) => {
+          let channels = []
+          db.createReadStream({
+            gt: "users:",
+            lte: "users" + String.fromCharCode(":".charCodeAt(0) + 1),
+          }).on('data', ({ key, value }) => {
+            user = JSON.parse(value)
+            user.id = key.split(':')[1]
+            channels = user.channels
+            channels = channels.filter((chan) => chan !== id)
+             db.put(`users:${user.id}`, JSON.stringify({
+              username: user.username,
+              email: user.email,
+              password: user.password,
+              channels: channels,
+              avatar: user.avatar
+            }))  
+          }).on('error', (err) => {
+            reject(err)
+          }).on('end', () => {
+            resolve(channels)
+          })
+        })
+      } catch (e) {
+        console.log(e)
+      }
+      
     }
   },
   messages: {
@@ -77,7 +114,8 @@ module.exports = {
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
         author: message.author,
         content: message.content,
-        email: message.email
+        email: message.email,
+        avatar: message.avatar
       }))
       return merge(message, { channelId: channelId, creation: creation })
     },
@@ -99,6 +137,18 @@ module.exports = {
           resolve(messages)
         })
       })
+    },
+    update: async (id, channelId, body) => {
+      const original = await db.get(`messages:${channelId}:${id}`)
+      const message =  JSON.parse(original)
+      if (!original) throw Error('Unregistered channel id')
+      await db.put(`messages:${channelId}:${id}`, JSON.stringify({
+        author: message.author,
+        content: body.content,
+        email: message.email,
+        avatar: message.avatar
+      }))
+      return merge(original, { channelId: channelId, creation: id })
     },
     delete: async (id, channelId) => {
       console.log("je veux delete " + id)
@@ -232,7 +282,8 @@ module.exports = {
                     username: e.username,
                     email: e.email,
                     password: e.password,
-                    channels: myChan
+                    channels: myChan,
+                    avatar: e.avatar
                   }))
                   resolve("User added to channel ")
                 } else {
@@ -246,7 +297,8 @@ module.exports = {
                         username: e.username,
                         email: e.email,
                         password: e.password,
-                        channels: myChan
+                        channels: myChan,
+                        avatar: e.avatar
                       }))
                       resolve("User added to channel ")
                     }
@@ -269,10 +321,18 @@ module.exports = {
         })
       });
     },
-    update: (id, user) => {
-      const original = store.users[id]
-      if (!original) throw Error('Unregistered user id')
-      store.users[id] = merge(original, user)
+    update: async (id, body) => {
+      const original = await db.get(`users:${id}`)
+      const user =  JSON.parse(original)
+      if (!original) throw Error('Unregistered channel id')
+      db.put(`users:${id}`, JSON.stringify({
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        channels: user.channels,
+        avatar: body.avatar
+      }))
+      return merge(original)
     },
     delete: async (id) => {
       const original = await db.get(`users:${id}`)

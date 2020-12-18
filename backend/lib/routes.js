@@ -58,6 +58,10 @@ routes.get('/', (req, res) => {
     const message = await db.messages.create(req.params.id, req.body)
     res.status(201).json(message)
   })
+  routes.put('/channels/:id/messages/:id_m', async (req, res) => {
+    const message = await db.messages.update(req.params.id_m,req.params.id, req.body)
+    res.status(201).json(message)
+  })
   routes.delete('/channels/:id/messages/:id_m', async (req, res) => {
     const message = await db.messages.delete(req.params.id_m, req.params.id)
     res.status(201).json(message)
@@ -89,7 +93,7 @@ routes.get('/', (req, res) => {
   })
   
   routes.put('/users/:id', async (req, res) => {
-    const user = await db.users.update(req.body)
+    const user = await db.users.update(req.params.id,req.body)
     res.json(user)
   })
   

@@ -39,7 +39,8 @@ export const signIn = async (username, email, password, onSuccess, onError) => {
                 username: username,
                 email: email,
                 password: password,
-                channels:[]
+                channels:[],
+                avatar:"monsterid"
             })
         });
 
@@ -65,6 +66,31 @@ export const addUsToChan = async (id, username, onSuccess, onError) => {
             method: 'PUT',
             body: JSON.stringify({
                 username: username,
+            })
+        });
+
+        if (response.ok) {
+            const json = await response.json()
+            onSuccess(json)
+        }
+        else {
+            const json = await response.json()
+            onError(json)
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const changeAvat = async (id, avatar, onSuccess, onError) => {
+    try {
+        const response = await fetch(`${BACK_HOST}/users/${id}`, {
+            headers: HTTP_HEADERS,
+            credentials: "include",
+            mode: 'cors',
+            method: 'PUT',
+            body: JSON.stringify({
+                avatar: avatar,
             })
         });
 

@@ -1,27 +1,49 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Button, Form, Modal, ButtonGroup, Dropdown, Row, Col } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
+import React, { useContext, useState } from 'react';
+import { Button, Form, Modal, Dropdown, Row, Col, Jumbotron, Container } from 'react-bootstrap';
 import styles from './dataStyle.module.css'
-import { useCookies } from "react-cookie";
-import { FaUserAlt } from 'react-icons/fa';
+import { Cookies, useCookies } from "react-cookie";
 import { FiSettings } from 'react-icons/fi';
 import Gravatar from 'react-gravatar'
+import { changeAvat } from '../../../../../utils/api_users';
+import { RoomContext } from '../../../../../Context/RoomContext';
+import { socket } from '../../../../../utils/socket';
+import AvatarChoice from './avatar/avatar';
 
 const Data = () => {
+
     const [cookies, setCookie] = useCookies(["user"]);
-    const handleClose = () => setShow(false);
+    const handleClose = () => (setShow(false), setShowavt(true));
     const handleShow = () => setShow(true);
+    const { room, setRoom } = useContext(RoomContext);
     const [show, setShow] = useState(false);
-    const test = () => {
-        console.log("hey")
+    const [showAvat, setShowavt] = useState(true)
+    const handleCloseAv = () => setShowavt(true);
+    const handleShowAv = () => setShowavt(false)
+    const [avatar, setAvatar] = useState(cookies.user.avatar)
+    const changeAvatar = (data) => {
+        changeAvat(cookies.user.id, data,
+            (onSucessMessage) => {
+                setCookie('user', { id: cookies.user.id, username: cookies.user.username, email: cookies.user.email, channels: cookies.user.channels, avatar: data })
+                setAvatar(data)
+                socket.emit('check room', { username: cookies.user.username, room: room.id, avatar: data }, (error) => {
+                    if (error) {
+                        alert(error);
+                    }
+                });
+                console.log(onSucessMessage)
+            }, (onErrorMessage) => {
+                console.log(onErrorMessage)
+            })
     }
+
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.data}>
                 <Row>
                     <Col>
-                    <Gravatar email={cookies.user.email}  rating="pg" default="monsterid" className="CustomAvatar-image" style={{ borderRadius:"50%"}}/>
-                   </Col>
+                        <Gravatar email={cookies.user.email} rating="pg" default={avatar} className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
+                    </Col>
                     <Col>
                         <span>{cookies.user.username}</span>
                     </Col>
@@ -32,11 +54,10 @@ const Data = () => {
                 </Row>
             </div>
             <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
+                <Modal.Header closeButton className={styles.mod}>
                     <Modal.Title>Settings </Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <Form>
+                <Modal.Body className={styles.mod}>
                         <Form.Group controlId="formBasicUser">
                             <Form.Label>Username : </Form.Label>
                             <Form.Control disabled type="text" name="name" value={cookies.user.username} />
@@ -45,27 +66,52 @@ const Data = () => {
                             <Form.Label>Email : </Form.Label>
                             <Form.Control disabled type="text" name="name" value={cookies.user.email} />
                         </Form.Group>
-                        <Form.Group controlId="formBasicUser">
-                            <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                    Dropdown Button
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item >Action</Dropdown.Item>
-                                    <Dropdown.Item >Another action</Dropdown.Item>
-                                    <Dropdown.Item >Something else</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </Form.Group>
+                            <div id="avatar" hidden>
+                                hello
+                            </div>
+
+                            <Button variant="outline-success" onClick={handleShowAv}>
+                                edit avatar
+                            </Button>
+                            <Row id={"showAvat"} className={styles.jumb} hidden={showAvat}>
+                                <Col sm={4} style={{ margin: "auto" }}>
+                                    <div onClick={e => changeAvatar("identicon")} className={styles.ico}>
+                                        <Gravatar email={cookies.user.email} size={75} rating="pg" default="identicon" className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
+                                    </div>
+                                </Col>
+                                <Col sm={4} style={{ margin: "auto" }}>
+                                    <div onClick={e => changeAvatar("monsterid")} className={styles.ico}>
+                                        <Gravatar email={cookies.user.email} size={75} rating="pg" default="monsterid" className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
+                                    </div>
+                                </Col>
+                                <Col sm={4} style={{ margin: "auto" }}>
+                                    <div onClick={e => changeAvatar("wavatar")} className={styles.ico}>
+                                        <Gravatar email={cookies.user.email} size={75} rating="pg" default="wavatar" className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
+                                    </div>
+                                </Col>
+                                <Col sm={4} style={{ margin: "auto" }}>
+                                    <div onClick={e => changeAvatar("retro")} className={styles.ico}>
+
+                                        <Gravatar email={cookies.user.email} size={75} rating="pg" default="retro" className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
+                                    </div>
+                                </Col>
+                                <Col sm={4} style={{ margin: "auto" }}>
+                                    <div onClick={e => changeAvatar("robohash")} className={styles.ico}>
+
+                                        <Gravatar email={cookies.user.email} size={75} rating="pg" default="robohash" className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
+                                    </div>
+
+                                </Col>
+                                <Col sm={4} style={{ margin: "auto" }}>
+                                    <div onClick={e => changeAvatar("mp")} className={styles.ico}>
+                                        <Gravatar email={cookies.user.email} size={75} rating="pg" default="mp" className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
+                                    </div>
+                                </Col>
+                            </Row>
 
                         <Button variant="secondary" onClick={handleClose}>
                             Close
                     </Button>
-                        <Button variant="outline-success" type="submit">
-                            Submit
-                    </Button>
-                    </Form>
-
                 </Modal.Body>
             </Modal>
         </div>

@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import styles from './loginStyle.module.css';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { login } from '../../../utils/api_users'
-import { useCookies } from "react-cookie";
 
 const Login = () => {
 
     const { register, handleSubmit, errors } = useForm();
     const [myerrors, setErrors] = useState('');
-    const [cookies, setCookie] = useCookies(["user"]);
     let history = useHistory();
 
     const onSubmit = (data) => {
@@ -24,6 +22,8 @@ const Login = () => {
                 setErrors(onErrorMessage);
             });
     }
+
+
 
     return (
         <div className={styles.wrapper}>

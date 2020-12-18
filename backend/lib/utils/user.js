@@ -1,11 +1,13 @@
+const { json } = require("body-parser");
+
 /* List users */  
 const users = [];
 
 /*Add user to list if is not already in a chat */
-const addUser = ({ id, username, room, email }) => {
+const addUser = ({ id, username, room, email, avatar }) => {
   /* Handling with capitalcase in pseudo */ 
   username = username.trim().toLowerCase();
-  const user = { id, username, room , email};
+  const user = { id, username, room , email, avatar};
   const alreadyIn = users.find((user) => user.room === room && user.username === username)
   if(alreadyIn){
     users.splice(users.indexOf(alreadyIn))
@@ -16,11 +18,44 @@ const addUser = ({ id, username, room, email }) => {
   return { user }
 }
 
+const addUser2 = ({ id, username, room, email, avatar }) => {
+  /* Handling with capitalcase in pseudo */ 
+  username = username.trim().toLowerCase();
+  let user = { id, username, room, email};
+  const alreadyIn = users.find((user) => user.room === room && user.username === username)
+  if(alreadyIn){
+    if(user.id !== alreadyIn.id)
+    {
+      const ind = users.findIndex((user) => user === alreadyIn)
+      users[ind].id = user.id
+      return { user }
+    }
+
+    user = alreadyIn
+    return { user }
+  }
+  return { user }
+}
+
+const changeAvatar = (username, room, avatar) => {
+  console.log("je lui enoir " + username)
+  const alreadyIn = users.find((user) => user.room === room && user.username === username)
+  if(alreadyIn){
+    const ind = users.findIndex((user) => user === alreadyIn)
+    console.log(JSON.stringify(users[ind]))
+    users[ind].avatar = avatar
+  }
+}
 /* get user with id */ 
 const getUser = (id) => {
   
   const user = users.find((user) => user.id === id);
   return user 
+}
+
+const getUserByUsername = (username) => {
+  const user = users.find((user) => user.username === username);
+  return { user } 
 }
 
 /* const findUserByUser = (username) => users.find((user) => user.username === username);
@@ -33,9 +68,7 @@ const removeUser = (id) => {
 }
 
 const getUsersInRoom = (room) =>{
-  console.log("je cherche dans " +  " : " + room)
   const mesUsers = users.filter((user) => user.room === room)
-  console.log("jaii " +  " : " + JSON.stringify(mesUsers))
   return mesUsers
 };
 
@@ -43,5 +76,8 @@ module.exports = {
   addUser,
   removeUser,
   getUser,
-  getUsersInRoom
+  getUsersInRoom,
+  addUser2,
+  changeAvatar,
+  getUserByUsername
 };

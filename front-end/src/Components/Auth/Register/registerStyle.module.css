@@ -16,9 +16,10 @@ html, body {
     max-width: 700px;
     padding: 35px;
     margin: 0 auto;
-    background-color: rgba(100, 98, 98, 0.068);
-    border-radius: 0%;
-    box-shadow: 0px 0px 50px rgba(36, 36, 36, 0.158);
+    background-color: #36393e;
+    border-radius: 5%;
+    box-shadow: 0px 0px 50px rgba(36, 36, 36, 0.781);
+    color: #7289da;
 }
 
 .boutConex{
