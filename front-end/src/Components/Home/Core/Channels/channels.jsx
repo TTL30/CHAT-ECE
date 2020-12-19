@@ -68,7 +68,6 @@ const Channels = () => {
     //switch room
     const changeRoom = (data) => {
         data.preventDefault();
-        console.log(data.target.value)
         if(data.target.value){
             const info = JSON.parse(data.target.value);
             setRoom({ 'id': info.id, 'id_cre': info.id_cre });
@@ -87,18 +86,10 @@ const Channels = () => {
         } 
     }
     
-    const getRandomCol = () =>{
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
 
     let listChannels = channelsUser.map((d, index) =>
         <Button key={d.id} style={{ marginTop: "3%", borderRadius:"12px"}}variant="outline-secondary" className={styles.but} value={JSON.stringify({ id: d.id, id_cre: d.id_cre })} onClick={e => changeRoom(e)}>
-            #__ {d.name} __#
+            #__  {d.name}  __#
         </Button>
     );
 
@@ -133,10 +124,10 @@ const Channels = () => {
             <Data />
             
             <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
+                <Modal.Header closeButton className={styles.mod} > 
                     <Modal.Title>Create a channel</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className={styles.mod} >
                     <Form onSubmit={handleSubmit(newChannel)} >
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Name : </Form.Label>

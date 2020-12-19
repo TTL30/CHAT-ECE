@@ -21,7 +21,6 @@ const Channel = (props) => {
                 </div>
             )
         }
-
     }
 
     return (

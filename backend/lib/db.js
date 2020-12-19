@@ -1,7 +1,6 @@
 
 const { v4: uuid } = require('uuid')
 const { clone, merge } = require('mixme')
-const microtime = require('microtime')
 const level = require('level')
 const db = level(__dirname + '/../db')
 
@@ -40,7 +39,6 @@ module.exports = {
       return merge(channel, { id: id })
     },
     list: async () => {
-      console.log("oui")
       return new Promise((resolve, reject) => {
         const channels = []
         db.createReadStream({
@@ -75,7 +73,6 @@ module.exports = {
     },
     delete: async (id) => {
       try {
-        console.log("mon id " + id)
         return new Promise((resolve, reject) => {
           let channels = []
           db.createReadStream({
@@ -151,7 +148,6 @@ module.exports = {
       return merge(original, { channelId: channelId, creation: id })
     },
     delete: async (id, channelId) => {
-      console.log("je veux delete " + id)
       const original = await db.get(`messages:${channelId}:${id}`)
       if (!original) throw Error('Unregistered channel id')
       await db.del(`messages:${channelId}:${id}`)

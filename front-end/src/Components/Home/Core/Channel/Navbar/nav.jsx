@@ -31,11 +31,6 @@ const NavRoom = () => {
             (onSucessMessage) => {
                 setErrors('');
                 setSuccess(onSucessMessage);
-                socket.emit('add to room', {username: data.username }, (error) => {
-                    if (error) {
-                        alert(error);
-                    }
-                });
 
             },
             (onErrorMessage) => {

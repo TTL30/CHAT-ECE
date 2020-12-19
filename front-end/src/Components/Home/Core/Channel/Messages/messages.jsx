@@ -4,27 +4,20 @@ import { useCookies } from "react-cookie";
 import styles from './messagesStyle.module.css';
 import { RoomContext } from "../../../../../Context/RoomContext";
 import { deleteMessageChannel, getMessagesChannel, upMessageChannel } from "../../../../../utils/api_messages";
-import { Button, Container, Row, Col, Form, Modal, InputGroup, FormControl } from "react-bootstrap";
+import { Button, Container, Row, Col, InputGroup, FormControl } from "react-bootstrap";
 import Gravatar from 'react-gravatar'
-import { useForm } from "react-hook-form";
 import {BsPencil} from 'react-icons/bs'
-import { ImBin2 } from 'react-icons/im'
 const Messages = () => {
 
   const [cookies, setCookie] = useCookies(["user"]);
   const { room, setRoom } = useContext(RoomContext);
   const [chat, setChat] = useState([]);
-  const handleClose = () => (setShow(false), setErrors(false));
-  const handleShow = () => setShow(true);
-  const [show, setShow] = useState(false);
-  const { register, handleSubmit, errors } = useForm();
-  const [myerrors, setErrors] = useState('');
   const [msgChange, setMsgChange] = useState('')
   const [msgChangeID, setIDMsgChange] = useState('');
+  
   const getMessages = () => {
     if (room) {
       getMessagesChannel(room.id, (onSucessMessage) => {
-        console.log("hello")
         setChat(onSucessMessage);
         socket.emit('check socket', { username: cookies.user.username, room: room.id, email:cookies.user.email, avatar:cookies.user.avatar }, (error) => {
           if (error) {
@@ -47,11 +40,11 @@ const Messages = () => {
       socket.on('message', msg => {
         setChat(chat => [...chat, msg]);
       }); 
+    
   }, []);
 
   useEffect(() => {
     socket.on('room del', () => {
-      console.log("ouii")
       localStorage.setItem('room',null)
       alert("Room has been delete you will be redirect to home")
       window.location.reload()

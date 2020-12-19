@@ -7,7 +7,6 @@ import Gravatar from 'react-gravatar'
 import { changeAvat } from '../../../../../utils/api_users';
 import { RoomContext } from '../../../../../Context/RoomContext';
 import { socket } from '../../../../../utils/socket';
-import AvatarChoice from './avatar/avatar';
 
 const Data = () => {
 
@@ -17,7 +16,6 @@ const Data = () => {
     const { room, setRoom } = useContext(RoomContext);
     const [show, setShow] = useState(false);
     const [showAvat, setShowavt] = useState(true)
-    const handleCloseAv = () => setShowavt(true);
     const handleShowAv = () => setShowavt(false)
     const [avatar, setAvatar] = useState(cookies.user.avatar)
     const changeAvatar = (data) => {
@@ -30,7 +28,6 @@ const Data = () => {
                         alert(error);
                     }
                 });
-                console.log(onSucessMessage)
             }, (onErrorMessage) => {
                 console.log(onErrorMessage)
             })

@@ -1,5 +1,3 @@
-const { json } = require("body-parser");
-
 /* List users */  
 const users = [];
 
@@ -38,11 +36,9 @@ const addUser2 = ({ id, username, room, email, avatar }) => {
 }
 
 const changeAvatar = (username, room, avatar) => {
-  console.log("je lui enoir " + username)
   const alreadyIn = users.find((user) => user.room === room && user.username === username)
   if(alreadyIn){
     const ind = users.findIndex((user) => user === alreadyIn)
-    console.log(JSON.stringify(users[ind]))
     users[ind].avatar = avatar
   }
 }
@@ -51,11 +47,6 @@ const getUser = (id) => {
   
   const user = users.find((user) => user.id === id);
   return user 
-}
-
-const getUserByUsername = (username) => {
-  const user = users.find((user) => user.username === username);
-  return { user } 
 }
 
 /* const findUserByUser = (username) => users.find((user) => user.username === username);
@@ -78,6 +69,5 @@ module.exports = {
   getUser,
   getUsersInRoom,
   addUser2,
-  changeAvatar,
-  getUserByUsername
+  changeAvatar
 };
