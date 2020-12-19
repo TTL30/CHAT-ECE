@@ -111,7 +111,7 @@ const Channels = () => {
                     Home
                 </button>
                 </div>
-            <div className={styles.listechan}>
+             <div className={styles.listechan}>
             <ButtonGroup vertical>
                     {listChannels}
             </ButtonGroup> 
@@ -123,7 +123,7 @@ const Channels = () => {
             </div>
             <Data />
             
-            <Modal show={show} onHide={handleClose}>
+           <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton className={styles.mod} > 
                     <Modal.Title>Create a channel</Modal.Title>
                 </Modal.Header>
@@ -144,7 +144,7 @@ const Channels = () => {
                     
                     </Form>
                 </Modal.Body>
-            </Modal>
+            </Modal> 
         </div>
     );
 }

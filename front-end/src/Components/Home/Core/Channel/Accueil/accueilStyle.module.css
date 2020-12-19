@@ -1,0 +1,17 @@
+
+.wrapper{
+    height: 78vh;;
+    display: flex;
+    justify-content: center;
+    background-color: #3b3c3d;
+    padding: 1%;
+    margin-top: 5%;
+    overflow: auto;
+    border-radius: 10px;
+    color: white;
+    font-family: monospace;
+}
+
+.txt{
+   
+}

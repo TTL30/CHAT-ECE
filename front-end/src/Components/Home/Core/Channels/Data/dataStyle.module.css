@@ -4,21 +4,19 @@ ml, body {
    }
 
 .wrapper{
-    height: 100%;
     justify-content: center;
     text-align: center;
-    padding: 1%;
+    padding-top: 10%;
+    padding-bottom: 10px;
 }
 
 
 .data{
-    margin-top: 7%;
     width: 100%;
     height: 100%;
     background-color: #282b30;
     color: #6275bd;
     font-size: 1.5em;
-    
 }
 
 .mod{

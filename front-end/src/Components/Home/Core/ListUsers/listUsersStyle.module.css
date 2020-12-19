@@ -39,10 +39,9 @@ ml, body {
     overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-color: transparent transparent; 
-    height: 80vh;
+    height: 77vh;
     background-color: #424549;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-radius: 10px;
     width: 83%;
     margin: auto;
 }

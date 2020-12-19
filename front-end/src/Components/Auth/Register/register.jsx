@@ -33,7 +33,7 @@ const Register = () => {
             <Form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
 
                 <div className="mb-5 text-center">
-                    <h2>Create ECECHAT account: </h2>
+                    <h2>Create ECE CHAT account : </h2>
                 </div>
 
                 <Form.Group controlId="formBasicEmail">

@@ -28,7 +28,7 @@ const Login = () => {
     return (
         <div className={styles.wrapper}>
             <Form className={styles.form} onSubmit={handleSubmit(e => onSubmit(e))}>
-                <h2>Connect to ECECHAT </h2>
+                <h2>Connect to ECE CHAT : </h2>
                 <Form.Group>
                     <Form.Label>Pseudo : </Form.Label>
                     <Form.Control type="text" placeholder="Type pseudo" name="pseudo" ref={register({ required: true, maxLength: 50 })} />

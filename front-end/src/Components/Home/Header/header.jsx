@@ -18,7 +18,7 @@ const Header = (props) => {
     
     return (
         <div>
-            <Navbar fixed="top" style={{backgroundColor:"#1e2124"}}>
+            <Navbar fixed="top" style={{backgroundColor:"#1e2124", borderBottom:"2px solid #424549"}}>
                 <Navbar.Brand style={{color:"#7289da"}} >ECE CHAT</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
