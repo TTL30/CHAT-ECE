@@ -8,7 +8,7 @@
 ## Initialisation du projet :
 - Installer les dépendances du frontend :
   ```
-  cd frontend && npm i
+  cd front-end && npm i
   ```
 - Installer les dépendances du backend : 
   ```
