@@ -12,7 +12,7 @@
   ```
 - Installer les dépendances du backend : 
   ```
-  cd backend && npm i
+  cd backend && npm i && cd ..
   ```
 
 - Nous avons utilisé le packet concurrently afin de lancer le backend et le frontend avec une seule commande:\
