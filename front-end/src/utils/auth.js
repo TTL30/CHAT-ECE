@@ -11,10 +11,10 @@ export const Auth = {
 
     authenticate(cb) {
         localStorage.clear();
-        cookies.set('user', cb,  {
+        cookies.set('user', cb, {
             maxAge: 60 * 60 * 1000,
             secure: true,
-            SameSite:"None",
+            SameSite: "None",
             path: '/',
         });
     },

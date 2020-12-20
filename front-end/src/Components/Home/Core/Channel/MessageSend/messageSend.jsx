@@ -16,9 +16,9 @@ const MessageSend = () => {
   const sendMessage = (event) => {
     event.preventDefault();
     const time = Date.now()
-    sendMessageToChannel(room.id, cookies.user.username, msg,time,cookies.user.email,cookies.user.avatar,
+    sendMessageToChannel(room.id, cookies.user.username, msg, time, cookies.user.email, cookies.user.avatar,
       (onSuccessMessage) => {
-        socket.emit('chat message', msg,time,cookies.user.email, () => setMsg(''));
+        socket.emit('chat message', msg, time, cookies.user.email, () => setMsg(''));
         console.log(onSuccessMessage)
       },
       (onErrorMessage) => {
@@ -29,9 +29,9 @@ const MessageSend = () => {
 
   return (
     <div>
-      
+
       <input value={msg} className={styles.send}
-            placeholder="Type a message..."
+        placeholder="   Type a message..."
         onChange={(event) => setMsg(event.target.value)}
         onKeyPress={event => event.key === 'Enter' ? sendMessage(event) : null}
       />

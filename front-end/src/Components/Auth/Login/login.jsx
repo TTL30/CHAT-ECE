@@ -23,8 +23,6 @@ const Login = () => {
             });
     }
 
-
-
     return (
         <div className={styles.wrapper}>
             <Form className={styles.form} onSubmit={handleSubmit(e => onSubmit(e))}>

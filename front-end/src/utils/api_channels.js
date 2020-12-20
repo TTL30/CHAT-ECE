@@ -1,4 +1,4 @@
-import {BACK_HOST, HTTP_HEADERS} from './constant'
+import { BACK_HOST, HTTP_HEADERS } from './constant'
 
 
 export const getChannels = async (id, onSuccess, onError) => {

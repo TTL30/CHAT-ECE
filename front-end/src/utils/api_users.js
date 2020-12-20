@@ -1,7 +1,7 @@
 import { Auth } from './auth';
-import {BACK_HOST, HTTP_HEADERS} from './constant'
+import { BACK_HOST, HTTP_HEADERS } from './constant'
 
-export const login = async (username,password, onSuccess, onError) => {
+export const login = async (username, password, onSuccess, onError) => {
     try {
         const response = await fetch(`${BACK_HOST}/login`, {
             headers: HTTP_HEADERS,
@@ -39,8 +39,8 @@ export const signIn = async (username, email, password, onSuccess, onError) => {
                 username: username,
                 email: email,
                 password: password,
-                channels:[],
-                avatar:"monsterid"
+                channels: [],
+                avatar: "monsterid"
             })
         });
 

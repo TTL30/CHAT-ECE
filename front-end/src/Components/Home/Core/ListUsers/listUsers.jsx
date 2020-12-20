@@ -14,11 +14,11 @@ const ListUsers = () => {
         });
     }, [])
 
-    const getRandomCol = () =>{
+    const getRandomCol = () => {
         const letters = '0123456789ABCDEF';
         let color = '#';
         for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
+            color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
     }
@@ -26,11 +26,11 @@ const ListUsers = () => {
     let listUsers = users.map((d, index) =>
         <div className={styles.listuser}>
             <Row>
-                <Col sm={3} style={{marginLeft:"1%"}}>
+                <Col sm={3} style={{ marginLeft: "1%" }}>
                     <Gravatar email={d.email} rating="pg" size={55} default={d.avatar} className="CustomAvatar-image" style={{ borderRadius: "50%" }} />
                 </Col>
                 <Col sm={8} className={styles.us}>
-                    <span key={d.id} style={{ marginTop: "5%", borderRadius: "12px", color:getRandomCol() }} className={styles.user}>
+                    <span key={d.id} style={{ marginTop: "5%", borderRadius: "12px", color: getRandomCol() }} className={styles.user}>
                         <b>{d.username}</b>
                     </span>
                 </Col>

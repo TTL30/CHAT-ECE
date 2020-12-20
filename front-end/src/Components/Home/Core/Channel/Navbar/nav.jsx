@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, Navbar, NavDropdown, Form, Nav, FormControl, Modal } from 'react-bootstrap';
+import { Button, Navbar, Form, Nav, Modal } from 'react-bootstrap';
 import { AiOutlineUserAdd, AiFillDelete } from 'react-icons/ai';
 import { useForm } from "react-hook-form";
 import { RoomContext } from "../../../../../Context/RoomContext";
@@ -11,8 +11,8 @@ import { socket } from '../../../../../utils/socket';
 
 
 const NavRoom = () => {
-    const [cookies, setCookie] = useCookies(["user"]);
 
+    const [cookies, setCookie] = useCookies(["user"]);
     const handleClose = () => (setShow(false), setErrors(false), setSuccess(''));
     const handleShow = () => setShow(true);
     const [show, setShow] = useState(false);
@@ -20,7 +20,7 @@ const NavRoom = () => {
     const handleShowDel = () => setShowDel(true);
     const [showDel, setShowDel] = useState(false);
     const [add, setAdd] = useState(true);
-    const { register,getValues, handleSubmit, errors } = useForm();
+    const { register, handleSubmit, errors } = useForm();
     const [myerrors, setErrors] = useState('');
     const [mySuccess, setSuccess] = useState('');
     const { room, setRoom } = useContext(RoomContext);
@@ -39,16 +39,16 @@ const NavRoom = () => {
     }
 
     const deleteChannel = () => {
-        deleteChan(room.id, 
+        deleteChan(room.id,
             (onSuccessMessage) => {
-                localStorage.setItem('room',null)
-                socket.emit('room deleted', {room: room.id }, (error) => {
+                localStorage.setItem('room', null)
+                socket.emit('room deleted', { room: room.id }, (error) => {
                     if (error) {
                         alert(error);
                     }
                 });
                 window.location.reload()
-            },(onErrorMessage)=>{
+            }, (onErrorMessage) => {
                 console.log(onErrorMessage)
             })
     }
@@ -76,24 +76,24 @@ const NavRoom = () => {
     return (
         <div>
             <Navbar style={{ backgroundColor: "#282b30", margin: "0 auto" }}>
-                <Navbar.Brand style={{ color: "#7289da", fontSize:"1.5em" }} ><b>{title}</b></Navbar.Brand>
+                <Navbar.Brand style={{ color: "#7289da", fontSize: "1.5em" }} ><b>{title}</b></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                     </Nav>
-                    <Button hidden={add} onClick={handleShow} variant="info" style={{backgroundColor:"#6275bd", border:"0", marginRight:"3%"}} >
+                    <Button hidden={add} onClick={handleShow} variant="info" style={{ backgroundColor: "#6275bd", border: "0", marginRight: "3%" }} >
                         <AiOutlineUserAdd />
                     </Button>
-                    <Button hidden={add} onClick={handleShowDel} variant="danger" style={{border:"0"}} >
-                       <AiFillDelete />
+                    <Button hidden={add} onClick={handleShowDel} variant="danger" style={{ border: "0" }} >
+                        <AiFillDelete />
                     </Button>
                 </Navbar.Collapse>
             </Navbar>
-             <Modal show={show} onHide={handleClose} >
+            <Modal show={show} onHide={handleClose} >
                 <Modal.Header closeButton className={styles.mod}>
                     <Modal.Title>Add a user </Modal.Title>
                 </Modal.Header>
-                <Modal.Body className={styles.mod} > 
+                <Modal.Body className={styles.mod} >
                     <Form onSubmit={handleSubmit(addUserToChannel)} >
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Name : </Form.Label>
@@ -119,20 +119,20 @@ const NavRoom = () => {
                         }
                     </Form>
                 </Modal.Body>
-            </Modal> 
+            </Modal>
 
             <Modal show={showDel} onHide={handleCloseDel} >
                 <Modal.Header closeButton className={styles.mod}>
                     <Modal.Title>Delete your channel </Modal.Title>
                 </Modal.Header>
-                <Modal.Body className={styles.mod} > 
+                <Modal.Body className={styles.mod} >
                     <Form onSubmit={handleSubmit(deleteChannel)} >
                         <Form.Group controlId="formBasicEmail">
                             <p>
-                            This action cannot be undone. This will permanently delete the channel <b>{title}</b>, messages, secrets, and remove all collaborator associations. 
+                                This action cannot be undone. This will permanently delete the channel <b>{title}</b>, messages, secrets, and remove all collaborator associations.
                             </p>
                             <Form.Label>Please type <b>{cookies.user.username}/{title} </b>to confirm.</Form.Label>
-                            <Form.Control type="text" name="validation" ref={register({ required: true,validate: validationChecked })} />
+                            <Form.Control type="text" name="validation" ref={register({ required: true, validate: validationChecked })} />
                             {errors.validation && errors.validation.type === "required" && <p className={styles.error}> <span>&#9888;</span> Merci de bien renseigner ce champ</p>}
                             {errors.validation && errors.validation.type === "validate" && <p className={styles.error}> <span>&#9888;</span> Merci de verifier ce que vous avez écrits</p>}
                         </Form.Group>

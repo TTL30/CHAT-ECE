@@ -1,5 +1,4 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Channels from './Channels/channels';
 import Channel from './Channel/channel';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -11,15 +10,15 @@ const Core = () => {
     return (
         <Container fluid className={styles.cont}>
             <Row>
-                <Col sm={2}className={styles.chna}>
+                <Col sm={2}>
                     <Channels />
-                 </Col>
-                <Col sm={8} className={styles.mesMe}>
-                   <Channel />
-                 </Col>
-                 <Col sm={2} className={styles.mesMe}>
-                   <ListUsers />
-                 </Col>
+                </Col>
+                <Col sm={8} >
+                    <Channel />
+                </Col>
+                <Col sm={2}>
+                    <ListUsers />
+                </Col>
             </Row>
         </Container>
     );

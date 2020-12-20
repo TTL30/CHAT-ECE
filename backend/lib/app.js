@@ -29,6 +29,7 @@ const { addUser,
 const BOTCHAT = "ECE-BOT";
 
 
+/// SOCKET IO ///
 io.on('connect', (socket) => {
 
   /* Join chat room  */
@@ -40,9 +41,9 @@ io.on('connect', (socket) => {
     }
     socket.join(user.room);
 
-    setTimeout(() => socket.emit('message', { author: BOTCHAT, content: `${user.username}, bienvenue sur  dans la conversation!`, channelId: room, creation: Date.now(), email: "bot" }), 300)
+    setTimeout(() => socket.emit('message', { author: BOTCHAT, content: `${user.username}, bienvenue dans la conversation!`, channelId: room, creation: Date.now(), email: "bot" }), 300)
 
-    socket.broadcast.to(user.room).emit('message', { author: BOTCHAT, content: `${user.username} a rejoins la conversation`, creation: Date.now(), email: "bot" });
+    socket.broadcast.to(user.room).emit('message', { author: BOTCHAT, content: `${user.username} a rejoint la conversation.`, creation: Date.now(), email: "bot" });
     io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
     callback();
   });

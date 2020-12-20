@@ -1,4 +1,4 @@
-import {BACK_HOST, HTTP_HEADERS} from './constant'
+import { BACK_HOST, HTTP_HEADERS } from './constant'
 
 
 export const getMessagesChannel = async (id, onSuccess, onError) => {
@@ -23,7 +23,7 @@ export const getMessagesChannel = async (id, onSuccess, onError) => {
     }
 }
 
-export const sendMessageToChannel = async (id, author, content, creation, email,avatar, onSuccess, onError) => {
+export const sendMessageToChannel = async (id, author, content, creation, email, avatar, onSuccess, onError) => {
     try {
         const response = await fetch(`${BACK_HOST}/channels/${id}/messages`, {
             headers: HTTP_HEADERS,
@@ -34,7 +34,7 @@ export const sendMessageToChannel = async (id, author, content, creation, email,
                 author: author,
                 content: content,
                 creation: creation,
-                email:email,
+                email: email,
                 avatar: avatar
             })
         });

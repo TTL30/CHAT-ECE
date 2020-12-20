@@ -8,7 +8,7 @@ const RoomContextProvider = (props) => {
         const localData = localStorage.getItem('room');
         if (localData === undefined || localData === null) {
             return null
-        } else{
+        } else {
             return JSON.parse(localData) ? JSON.parse(localData) : null
         }
     })

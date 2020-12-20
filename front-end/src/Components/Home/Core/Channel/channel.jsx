@@ -6,9 +6,9 @@ import Accueil from './Accueil/accueil';
 import { RoomContext } from '../../../../Context/RoomContext';
 import NavRoom from './Navbar/nav';
 
-const Channel = (props) => {
-    
-    const Display = (props) => {
+const Channel = () => {
+
+    const Display = () => {
         const { room, setRoom } = useContext(RoomContext);
         if (room === null) {
             return <Accueil />;

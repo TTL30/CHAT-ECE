@@ -1,6 +1,6 @@
 
 .wrapper{
-    height: 78vh;;
+    height: 83vh;;
     display: flex;
     justify-content: center;
     background-color: #3b3c3d;
@@ -10,8 +10,4 @@
     border-radius: 10px;
     color: white;
     font-family: monospace;
-}
-
-.txt{
-   
 }

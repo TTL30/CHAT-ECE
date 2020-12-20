@@ -31,9 +31,9 @@ const App = () => {
       <Switch>
         <Route path="/login" exact component={Login} />
         <Route path="/register" exact component={Register} />
-          <RoomContextProvider>
-            <AuthRoute path="/" exact component={Home} />
-          </RoomContextProvider>
+        <RoomContextProvider>
+          <AuthRoute path="/" exact component={Home} />
+        </RoomContextProvider>
 
       </Switch>
     </Router>
