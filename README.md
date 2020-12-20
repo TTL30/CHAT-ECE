@@ -8,11 +8,11 @@
 ## Initialisation du projet :
 - Installer les dépendances du frontend :
   ```
-  cd front-end && npm i
+  cd front-end && npm i && cd ..
   ```
 - Installer les dépendances du backend : 
   ```
-  cd backend && npm i && cd ..
+  cd backend && npm i
   ```
 
 - Nous avons utilisé le packet concurrently afin de lancer le backend et le frontend avec une seule commande:\
